@@ -1,0 +1,65 @@
+import matplotlib.pyplot as plt
+
+# Define the node points and their coordinates in the diamond shape
+points = {
+    "Authoritarianship": (0, 1),
+    "Espionage": (-1, 0),
+    "Anarchy": (0, -1),
+    "Migration": (1, 0)
+}
+
+# Define the connections (edges) between the points
+edges = [
+    ("Authoritarianship", "Espionage"),
+    ("Espionage", "Anarchy"),
+    ("Anarchy", "Migration"),
+    ("Migration", "Authoritarianship"),
+    ("Authoritarianship", "Anarchy"),
+    ("Espionage", "Migration")
+]
+
+# Create the figure and axis
+fig, ax = plt.subplots(figsize=(6, 6))
+
+# Plot the edges
+for edge in edges:
+    point1, point2 = edge
+    x_values = [points[point1][0], points[point2][0]]
+    y_values = [points[point1][1], points[point2][1]]
+    ax.plot(x_values, y_values, 'k-', lw=2)
+
+# Plot the nodes
+for point, coord in points.items():
+    ax.plot(coord[0], coord[1], 'ro')
+    ax.text(coord[0] * 1.1, coord[1] * 1.1, point, ha='center', va='center', fontsize=12)
+
+# Plot the Zeta factor at the center
+zeta_coord = (0, 0)
+ax.plot(zeta_coord[0], zeta_coord[1], 'bo', markersize=10)
+ax.text(zeta_coord[0], zeta_coord[1], 'Zeta', ha='center', va='center', fontsize=12, color='blue')
+
+# Add arrows to represent the Zeta factor's influence on each vertex
+zeta_arrow_props = dict(facecolor='green', edgecolor='black', arrowstyle='->', lw=2)
+for point, coord in points.items():
+    ax.annotate('', xy=coord, xytext=zeta_coord, arrowprops=zeta_arrow_props)
+
+# Overlay Naash analysis as concentric circles
+circle_colors = ['lightgrey', 'grey', 'darkgrey']
+for i, color in enumerate(circle_colors):
+    circle = plt.Circle(zeta_coord, radius=0.4*(i+1), color=color, fill=False, linestyle='--', lw=2)
+    ax.add_patch(circle)
+
+# Add the Gott principle as a boundary line
+gott_radius = 0.7
+gott_circle = plt.Circle(zeta_coord, radius=gott_radius, color='purple', fill=False, linestyle='-', lw=3, alpha=0.5)
+ax.add_patch(gott_circle)
+ax.text(0, -0.9, 'Gott Principle Boundary', ha='center', va='center', fontsize=10, color='purple')
+
+# Set equal scaling
+ax.set_aspect('equal')
+
+# Hide the axes
+ax.axis('off')
+
+# Display the plot
+plt.show()
